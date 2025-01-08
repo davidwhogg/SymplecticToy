@@ -1,0 +1,71 @@
+% Copyright 2025 the author(s).
+
+\documentclass{article}
+\usepackage[letterpaper]{geometry}
+\usepackage{amsmath}
+
+% typesetting
+\setlength{\textheight}{8.70in}
+\setlength{\textwidth}{5.00in}
+\setlength{\oddsidemargin}{3.25in}\addtolength{\oddsidemargin}{-0.5\textwidth}
+\setlength{\topmargin}{-0.40in}
+\frenchspacing\sloppy\sloppypar\raggedbottom
+
+% math macros
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert_2^2}
+
+% units macros
+\newcommand{\unit}[1]{\mathrm{#1}}
+\newcommand{\m}{\unit{m}}
+\newcommand{\s}{\unit{s}}
+\newcommand{\ps}{\s^{-1}}
+\newcommand{\mps}{\m\,\ps}
+\newcommand{\mmps}{\m^2\,\ps}
+
+\title{\bfseries%
+A toy problem for symplectic maps}
+\author{The participants of \textsl{Data And Geometry}}
+\date{January 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{One-dimensional problem}
+You are given $n$ one-dimensional positions $x_i$ (units of $\m$) and one-dimensional velocities $v_i$ (units of $\mps$) corresponding to times $t_i$ (units of $\s$), with $1\leq i\leq n$.
+These points are $n$ snapshots at times $t_i$ of a particle in phase space on an orbit.
+Our goal is to find an area-preserving map $T_W$ from $x, v$ to new coordinates $\xi, \eta$ such that
+\begin{align}
+    \begin{bmatrix}\xi^{(W)}_i \\ \eta^{(W)}_i\end{bmatrix} &= T_W(\begin{bmatrix}x_i \\ v_i\end{bmatrix}) ~,
+\end{align}
+where the action of $T_W$ is presumably extremely nonlinear.
+The new coordinates ought to lie (nearly) on an ellipse of the form
+\begin{align}
+    \begin{bmatrix}\xi^{(J)}_i \\ \eta^{(J)}_i\end{bmatrix} &= \begin{bmatrix}\sqrt{J\,\omega^{-1}}\,\sin(\omega\,t_i+\phi) \\ \sqrt{J\,\omega}\,\cos(\omega\,t_i+\phi)\end{bmatrix}
+\end{align}
+for some values of $J$ (units of $\mmps$), $\omega$ (units of $\ps$), and $\phi$ (dimensionless).\footnote{Side question: Do we need to have a $\phi$ variable? Or can we set $\phi=0$ without loss of generality?}
+The area-preserving map will have parameters or weights $W$ (which, in practice, will be a large structured blob of numbers, some of which may have units).
+
+We are going to solve this problem by minimizing a cost function with respect to the parameters $W,J,\omega,\phi$.
+This could be something ``discriminative'' like
+\begin{align}
+    \hat{W},\hat{J},\hat{\omega},\hat{\phi} &\leftarrow \argmin_{W,J,\omega,\phi} \sum_{i=1}^n\norm{\begin{bmatrix}\xi^{(W)}_i \\ \eta^{(W)}_i\end{bmatrix} - \begin{bmatrix}\xi^{(J)}_i \\ \eta^{(J)}_i\end{bmatrix}} ~.
+\end{align}
+Or this could be something ``generative'' like
+\begin{align}
+    \hat{W},\hat{J},\hat{\omega},\hat{\phi} &\leftarrow \argmin_{W,J,\omega,\phi} \sum_{i=1}^n\norm{\begin{bmatrix}x_i \\ v_i\end{bmatrix} - T_W^{-1}(\begin{bmatrix}\xi^{(J)}_i \\ \eta^{(J)}_i\end{bmatrix})} ~,
+\end{align}
+where $T_W^{-1}$ is the inverse of the map.
+In principle the generative direction is more scientifically responsible, if we think of the $x_i, y_i$ as being ``data.''
+Since our goal is $T_W$ and not (particularly) $T_W^{-1}$, which we choose depends on how easy it is to get inverses.\footnote{Presumably getting inverses is either very hard or else must be framed as a separate learning problem?}
+
+\section{Three-dimensional problem}
+How does this generalize to three dimensions?
+Is it as simple as
+\begin{align}
+    \begin{bmatrix}\xi^{(J)}_{ki} \\ \eta^{(J)}_{ki}\end{bmatrix} &= \begin{bmatrix}\sqrt{J_k\,\omega_k^{-1}}\,\sin(\omega_k\,t_i+\phi_k) \\ \sqrt{J_k\,\omega_k}\,\cos(\omega_k\,t_i+\phi_k)\end{bmatrix} ~,
+\end{align}
+where $1\leq k\leq 3$?
+
+\end{document}
