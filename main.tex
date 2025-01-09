@@ -2,7 +2,7 @@
 
 \documentclass{article}
 \usepackage[letterpaper]{geometry}
-\usepackage{amsmath}
+\usepackage{amsmath, amsfonts}
 
 % typesetting
 \setlength{\textheight}{8.70in}
@@ -12,6 +12,7 @@
 \frenchspacing\sloppy\sloppypar\raggedbottom
 
 % math macros
+\newcommand{\dd}{\mathrm{d}}
 \DeclareMathOperator*{\argmin}{argmin}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert_2^2}
 
@@ -37,12 +38,12 @@ You are given $n$ one-dimensional positions $x_i$ (units of $\m$) and one-dimens
 These points are $n$ snapshots at times $t_i$ of a particle in phase space on an orbit.
 Our goal is to find an area-preserving map $T_W$ from $x, v$ to new coordinates $\xi, \eta$ such that
 \begin{align}
-    \begin{bmatrix}\xi^{(W)}_i \\ \eta^{(W)}_i\end{bmatrix} &= T_W(\begin{bmatrix}x_i \\ v_i\end{bmatrix}) ~,
+    \begin{bmatrix}\xi^{(W)}_i \\ \eta^{(W)}_i\end{bmatrix} &= T_W\left(\begin{bmatrix}x_i \\ v_i\end{bmatrix}\right) ~,
 \end{align}
 where the action of $T_W$ is presumably extremely nonlinear.
 The new coordinates ought to lie (nearly) on an ellipse of the form
 \begin{align}
-    \begin{bmatrix}\xi^{(J)}_i \\ \eta^{(J)}_i\end{bmatrix} &= \begin{bmatrix}\sqrt{J\,\omega^{-1}}\,\sin(\omega\,t_i+\phi) \\ \sqrt{J\,\omega}\,\cos(\omega\,t_i+\phi)\end{bmatrix}
+    \begin{bmatrix}\xi^{(J)}_i \\ \eta^{(J)}_i\end{bmatrix} &= \begin{bmatrix}\sqrt{2\,J\,\omega^{-1}}\,\sin(\omega\,t_i+\phi) \\ \sqrt{2\,J\,\omega}\,\cos(\omega\,t_i+\phi)\end{bmatrix}
 \end{align}
 for some values of $J$ (units of $\mmps$), $\omega$ (units of $\ps$), and $\phi$ (dimensionless).\footnote{Side question: Do we need to have a $\phi$ variable? Or can we set $\phi=0$ without loss of generality?}
 The area-preserving map will have parameters or weights $W$ (which, in practice, will be a large structured blob of numbers, some of which may have units).
@@ -60,13 +61,46 @@ where $T_W^{-1}$ is the inverse of the map.
 In principle the generative direction is more scientifically responsible, if we think of the $x_i, y_i$ as being ``data.''
 Since our goal is $T_W$ and not (particularly) $T_W^{-1}$, which we choose depends on how easy it is to get inverses.\footnote{Presumably getting inverses is either very hard or else must be framed as a separate learning problem?}
 
+\subsection{An Attempt to Show Hogg's Conjecture}
+
+We want to show that, under some regularity conditions on the original orbits in the universe, there is a symplectic map $f : R^2 \to R^2$ such that the orbits become elliptical with a fixed angular frequency. 
+Let's consider a single particle. 
+
+To show this, let's write out a Hamiltonian to describe the original orbits
+\begin{align}
+    \frac{\dd x}{\dd t} &= - \frac{\partial \mathcal{H}}{\partial v}, \quad \frac{d v}{dt} = \frac{\partial \mathcal{H}}{\partial x}. 
+\end{align}
+We want to get a closed-form ODE in terms of the new phase parameters $f_1, f_2$ (not sure how the units come to play here). So, chain rule and plugging in the above time derivatives gives us 
+\begin{align}
+    \frac{\dd f_1}{\dd t} &= - \frac{\partial f_1}{\partial x} \frac{\partial \mathcal{H}}{\partial v} + \frac{\partial f_1}{\partial v} \frac{\partial \mathcal{H}}{\partial x} \quad
+    \frac{\dd f_2}{\dd t} = - \frac{\partial f_2}{\partial x} \frac{\partial \mathcal{H}}{\partial v} + \frac{\partial f_2}{\partial v} \frac{\partial \mathcal{H}}{\partial x}.
+\end{align}
+
+The ODE for which the solution is an elliptical orbit with a fixed angular frequency is given by 
+\begin{align}
+    \frac{\dd}{\dd t} \begin{bmatrix} x \\ y \end{bmatrix} &= \begin{bmatrix} 0 & a \\ -b & 0 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}, \quad a\,b > 0. 
+\end{align}
+This is a nice linear system and admits a solution:  $x(t)=\sqrt{a} \sin(\sqrt{a\,b}\,t + \phi) $, $y(t)= \sqrt{b} \cos(\sqrt{a\,b}\,t + \phi)$; the angular frequency is $\sqrt{a\,b}$ here. $\phi$ here gives us the initial condition, but if we have data from the complete orbit, it may be dropped (?). \footnote{Mmh, setting $a = 2 J \omega^{-1}$ and $b = 2 J w$ to match the above parameters gives us $\sqrt{a\,b}=2\,J$ for the angular frequency. Something seems a little bit off here (?)}
+
+To ensure that $f_1, f_2$ follows an elliptical orbit, we would like to have
+\begin{align}
+    - \frac{\partial f_1}{\partial x} \frac{\partial \mathcal{H}}{\partial v} + \frac{\partial f_1}{\partial v} \frac{\partial \mathcal{H}}{\partial x} &= a\,f_2, \quad
+     - \frac{\partial f_2}{\partial x} \frac{\partial \mathcal{H}}{\partial v} + \frac{\partial f_2}{\partial v} \frac{\partial \mathcal{H}}{\partial x} = -b\,f_1,
+\end{align}
+which can also be expressed using a Poisson bracket 
+\begin{align}
+    [f_1, \mathcal{H}] &= a f_2, \quad [f_2, \mathcal{H}] = -b\,f_1. 
+\end{align}
+This calculation shows that Hogg's conjecture holds iff we can find a symplectic map $f$ such that the above condition is satisfied for some real numbers $a, b$. 
+
 \section{Three-dimensional problem}
 How does this generalize to three dimensions?
 Is it as simple as
 \begin{align}
     \begin{bmatrix}\boldsymbol{\xi}^{(W)}_i \\ \boldsymbol{\eta}^{(W)}_i\end{bmatrix} &= T_W(\begin{bmatrix}\boldsymbol{x}_i \\ \boldsymbol{v}_i\end{bmatrix}) \\
-    \begin{bmatrix}\xi^{(J)}_{ki} \\ \eta^{(J)}_{ki}\end{bmatrix} &= \begin{bmatrix}\sqrt{J_k\,\omega_k^{-1}}\,\sin(\omega_k\,t_i+\phi_k) \\ \sqrt{J_k\,\omega_k}\,\cos(\omega_k\,t_i+\phi_k)\end{bmatrix} ~,
+    \begin{bmatrix}\xi^{(J)}_{ki} \\ \eta^{(J)}_{ki}\end{bmatrix} &= \begin{bmatrix}\sqrt{2\,J_k\,\omega_k^{-1}}\,\sin(\omega_k\,t_i+\phi_k) \\ \sqrt{2\,J_k\,\omega_k}\,\cos(\omega_k\,t_i+\phi_k)\end{bmatrix} ~,
 \end{align}
-where $1\leq k\leq 3$?
+where $\boldsymbol{x}, \boldsymbol{v}, \boldsymbol{\xi}, \boldsymbol{\eta}$ are now three-vectors (column vectors in $\mathbb{R}^{3\times 1}$ with the same units as $x, v, \xi, \eta$ above),
+and $\xi_{ki}, \eta_{ki}$ are the $k$th components of the three-vectors $1\leq k\leq 3$?
 
 \end{document}
