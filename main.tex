@@ -1,4 +1,11 @@
-% Copyright 2025 the author(s).
+% Copyright 2025 the author(s).\
+
+% style notes
+% -----------
+% - write such that physicists, mathematicians, and statisticians would all be happy.
+% - all equations get numbers; no exceptions. Use the align environment.
+% - the multiply operator is \,
+% - etc.
 
 \documentclass{article}
 \usepackage[letterpaper]{geometry}
@@ -40,7 +47,7 @@ Our goal is to find an area-preserving map $T_W$ from $x, v$ to new coordinates 
 \begin{align}
     \begin{bmatrix}\xi^{(W)}_i \\ \eta^{(W)}_i\end{bmatrix} &= T_W\left(\begin{bmatrix}x_i \\ v_i\end{bmatrix}\right) ~,
 \end{align}
-where the action of $T_W$ is presumably extremely nonlinear.
+where the function $T_W$ is presumably extremely nonlinear in its inputs.
 The new coordinates ought to lie (nearly) on an ellipse of the form
 \begin{align}
     \begin{bmatrix}\xi^{(J)}_i \\ \eta^{(J)}_i\end{bmatrix} &= \begin{bmatrix}\sqrt{2\,J\,\omega^{-1}}\,\sin(\omega\,t_i+\phi) \\ \sqrt{2\,J\,\omega}\,\cos(\omega\,t_i+\phi)\end{bmatrix}
@@ -80,7 +87,7 @@ The ODE for which the solution is an elliptical orbit with a fixed angular frequ
 \begin{align}
     \frac{\dd}{\dd t} \begin{bmatrix} x \\ y \end{bmatrix} &= \begin{bmatrix} 0 & a \\ -b & 0 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}, \quad a\,b > 0. 
 \end{align}
-This is a nice linear system and admits a solution:  $x(t)=\sqrt{a} \sin(\sqrt{a\,b}\,t + \phi) $, $y(t)= \sqrt{b} \cos(\sqrt{a\,b}\,t + \phi)$; the angular frequency is $\sqrt{a\,b}$ here. $\phi$ here gives us the initial condition, but if we have data from the complete orbit, it may be dropped (?). \footnote{Mmh, setting $a = 2 J \omega^{-1}$ and $b = 2 J w$ to match the above parameters gives us $\sqrt{a\,b}=2\,J$ for the angular frequency. Something seems a little bit off here (?)}
+This is a nice linear system and admits a solution:  $x(t)=\sqrt{a} \sin(\sqrt{a\,b}\,t + \phi) $, $y(t)= \sqrt{b} \cos(\sqrt{a\,b}\,t + \phi)$; the angular frequency is $\sqrt{a\,b}$ here. $\phi$ here gives us the initial condition, but if we have data from the complete orbit, it may be dropped (?). \footnote{Teresa says: Mmh, setting $a = 2 J \omega^{-1}$ and $b = 2 J w$ to match the above parameters gives us $\sqrt{a\,b}=2\,J$ for the angular frequency. Something seems a little bit off here? Hogg says: No that's correct; $J$ is the area of the ellipse divided by $2\pi$, so this should be correct.}
 
 To ensure that $f_1, f_2$ follows an elliptical orbit, we would like to have
 \begin{align}
