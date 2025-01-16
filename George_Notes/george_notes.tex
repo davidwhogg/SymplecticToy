@@ -75,8 +75,11 @@ We have
 
 where again we ask that $\hat{Q}\approx Q$.
 
-\subsection{Parametrizations of symplectic maps}.
+\subsection{Parametrizations of symplectic maps}
 
-There are two main ways to parametrize $\Phi$, which 
+There are two main ways to parametrize $\Phi_\text{nn}$. Broadly, the first generates symplectic transformations by estimating a Hamiltonian (e.g. using a smooth neural network) and then using a symplectic integrator to construct the corresponding map \cite{greydanus2019hamiltonian,bertalan2019learning}. In these architectures, if the integrator is differentiable, it is possible to back-propagate through to the network weights parametrizing the Hamiltonian; otherwise, an adjoint method needs to be used (similar to the Neural-ODE setting \cite{chen2018neuralODE}). While this parametrization yields invertible diffeomorphisms, it does not trivial \gak{check} to obtain the inverse map computationally. \gak{There is likely more work in this subfield over the past 5 years that I am not entirely familiar with.} An alternative approach is offered by triangular symplectic architectures \cite{burby2020fast,jin2020sympnets} based on a characterization outlined in \cite{turaev2002polynomial}. Additional structure can be imposed with respect to symmetry \cite{duruisseaux2023approximation} and Lipschitz control \cite{kevrekidis2024neural}. Importantly, such maps are easily invertible, and so a closed-form inverse (parametrized by a similar neural architecture) is available for such maps. \gak{Some more recent work has been done since last year, I am not yet very familiar with it, but I will try to update.}
+
+\bibliography{George_Notes/george_notes.bib}
+\bibliographystyle{ieeetr}
 
 \end{document}
