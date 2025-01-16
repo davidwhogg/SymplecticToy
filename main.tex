@@ -20,6 +20,8 @@
 
 % math macros
 \newcommand{\dd}{\mathrm{d}}
+\def \R    {{\mathbb R}}
+
 \DeclareMathOperator*{\argmin}{argmin}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert_2^2}
 
@@ -31,9 +33,12 @@
 \newcommand{\mps}{\m\,\ps}
 \newcommand{\mmps}{\m^2\,\ps}
 
+\usepackage{xcolor}
+\newcommand{\blue}[1] {{\color{blue}#1}}
+
 \title{\bfseries%
 A toy problem for symplectic maps}
-\author{The participants of \textsl{Data And Geometry}}
+\author{The participants of \textsl{Geometry@FI}}
 \date{2025 January}
 
 \begin{document}
@@ -41,7 +46,7 @@ A toy problem for symplectic maps}
 \maketitle
 
 \section{One-dimensional problem}
-You are given $n$ one-dimensional positions $x_i$ (units of $\m$) and one-dimensional velocities $v_i$ (units of $\mps$) corresponding to times $t_i$ (units of $\s$), with $1\leq i\leq n$.
+In the toy setup, we are given $n$ one-dimensional positions $x_i$ (units of $\m$) and one-dimensional velocities $v_i$ (units of $\mps$) corresponding to times $t_i$ (units of $\s$), with $1\leq i\leq n$.
 These points are $n$ snapshots at times $t_i$ of a particle in phase space on an orbit.
 Our goal is to find an area-preserving map $T_W$ from $x, v$ to new coordinates $\xi, \eta$ such that
 \begin{align}
@@ -66,11 +71,12 @@ Or this could be something ``generative'' like
 \end{align}
 where $T_W^{-1}$ is the inverse of the map.
 In principle the generative direction is more scientifically responsible, if we think of the $x_i, y_i$ as being ``data.''
-Since our goal is $T_W$ and not (particularly) $T_W^{-1}$, which we choose depends on how easy it is to get inverses.\footnote{Presumably getting inverses is either very hard or else must be framed as a separate learning problem?}
+Since our goal is $T_W$ and not (particularly) $T_W^{-1}$, which we choose depends on how easy it is to get inverses.\footnote{The H\'enon maps presented by George K have simple inverses, so inversion may be very easy.}
 
 \subsection{An Attempt to Show Hogg's Conjecture}
 
-We want to show that, under some regularity conditions on the original orbits in the universe, there is a symplectic map $f : R^2 \to R^2$ such that the orbits become elliptical with a fixed angular frequency. 
+\textbf{Hogg's Conjecture.} Under some regularity conditions on the original orbits in the universe, there is a symplectic map $f : R^2 \to R^2$ such that the orbits become elliptical with a fixed angular frequency. 
+
 Let's consider a single particle. 
 
 To show this, let's write out a Hamiltonian to describe the original orbits
@@ -87,7 +93,7 @@ The ODE for which the solution is an elliptical orbit with a fixed angular frequ
 \begin{align}
     \frac{\dd}{\dd t} \begin{bmatrix} x \\ y \end{bmatrix} &= \begin{bmatrix} 0 & a \\ -b & 0 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}, \quad a\,b > 0. 
 \end{align}
-This is a nice linear system and admits a solution:  $x(t)=\sqrt{a} \sin(\sqrt{a\,b}\,t + \phi) $, $y(t)= \sqrt{b} \cos(\sqrt{a\,b}\,t + \phi)$; the angular frequency is $\sqrt{a\,b}$ here. $\phi$ here gives us the initial condition, but if we have data from the complete orbit, it may be dropped (?). \footnote{Teresa says: Mmh, setting $a = 2 J \omega^{-1}$ and $b = 2 J w$ to match the above parameters gives us $\sqrt{a\,b}=2\,J$ for the angular frequency. Something seems a little bit off here? Hogg says: No that's correct; $J$ is the area of the ellipse divided by $2\pi$, so this should be correct.}
+This is a nice linear system and admits a solution:  $x(t)=\sqrt{a} \sin(\sqrt{a\,b}\,t + \phi) $, $y(t)= \sqrt{b} \cos(\sqrt{a\,b}\,t + \phi)$; the angular frequency is $\sqrt{a\,b}$ here. $\phi$ here gives us the initial condition, but if we have data from the complete orbit, it may be dropped (?). \footnote{Someone asks: Mmh, setting $a = 2\,J\,\omega^{-1}$ and $b = 2\,J\,\omega$ to match the above parameters gives us $\sqrt{a\,b}=2\,J$ for the angular frequency. Something seems a little bit off here? Hogg says: No that's correct; $J$ is the area of the ellipse divided by $2\pi$, so this should be correct.}
 
 To ensure that $f_1, f_2$ follows an elliptical orbit, we would like to have
 \begin{align}
@@ -108,6 +114,77 @@ Is it as simple as
     \begin{bmatrix}\xi^{(J)}_{ki} \\ \eta^{(J)}_{ki}\end{bmatrix} &= \begin{bmatrix}\sqrt{2\,J_k\,\omega_k^{-1}}\,\sin(\omega_k\,t_i+\phi_k) \\ \sqrt{2\,J_k\,\omega_k}\,\cos(\omega_k\,t_i+\phi_k)\end{bmatrix} ~,
 \end{align}
 where $\boldsymbol{x}, \boldsymbol{v}, \boldsymbol{\xi}, \boldsymbol{\eta}$ are now three-vectors (column vectors in $\mathbb{R}^{3\times 1}$ with the same units as $x, v, \xi, \eta$ above),
-and $\xi_{ki}, \eta_{ki}$ are the $k$th components of the three-vectors $1\leq k\leq 3$?
+and $\xi_{ki}, \eta_{ki}$ are the $k$th components of the three-vectors (with $1\leq k\leq 3$)?
+
+\section{One-dimensional non-toy problem}
+Our recent work on the local dark-matter density \cite{horta} could be translated into this language as follows:
+
+In the non-toy one-dimensional problem, we are given $n$ one-dimensional positions $x_i$ (units of $\m$), $n$ corresponding one-dimensional velocities $v_i$ (units of $\mps$, and $n$ corresponding $k$-element lists $Z_i$ (diverse units), with $1\leq i\leq n$.
+In this case, the $n$ phase-space points are not points along one trajectory, but rather the positions and velocities of a set of stars.
+The $n$ lists $Z_i$ are lists of stellar properties that are invariant with time (likely element abundances, but they could be birthdays or other invariant properties).
+We seek a symplectic map $T_W$ from $x, v$ to $\xi, \eta$ such that
+\begin{align}
+    \begin{bmatrix}\xi_i \\ \eta_i\end{bmatrix} &= T(\begin{bmatrix}x_i \\ v_i\end{bmatrix}; W_T)\\
+    \begin{bmatrix}\xi_i \\ \eta_i\end{bmatrix} &= \begin{bmatrix}\sqrt{2\,J_i}\,\sin(\theta_i) \\ \sqrt{2\,J_i}\,\cos(\theta_i)\end{bmatrix} \\
+    J_i &= \frac{1}{2}\,\xi_i^2 + \frac{1}{2}\,\eta_i^2 ~,
+\end{align}
+where again $W_T$ is a big block of weights parameterizing the symplectic map,
+there is now not just one invariant $J$ for all points but instead there is one $J_i$ for each star $i$,
+and we have dropped the concept of frequency $\omega$.\footnote{Hogg is concerned about this move because then the units of $\xi,\eta$ become really weird; is that a problem? The mathematicians never think so.}
+
+The assumption is that the distribution of the $Z_i$ depends on phase-space ($x, v$) location, but only through the one-dimensional invariants $J_i$ and not through the one-dimensional angles $\theta_i$.
+That is, in addition to the map $T(\cdot;W_T)$ we will have to learn another function $\zeta(J;W_\zeta)$ that is used to predict the stellar properties $Z_i$, where $W_\zeta$ is another block of weights.
+The objective function is then somehow
+\begin{align}
+    \hat{W_T},\hat{W_\zeta} &\leftarrow \argmin_{W_T, W_\zeta} \sum_{i=1}^n\norm{Z_i - \zeta(J_i; W_\zeta)} ~,
+\end{align}
+where the dependence of the $J_i$ on the $W_T$ is left implicit.
+There is a better objective function that weights the $Z_i$ by their inverse variances, but that change is officially trivial.
+
+\section{Three-dimensional non-toy problem}
+HOGG: WRITE HERE.
+
+\section{Architectures}
+
+Given $\{ x_i, v_i, Q_i \}_{i=1}^n$, we want to learn latent $(J, \theta)$ so that $J$ is a sufficient statistic for $Q$
+
+\textbf{George's method I.} 
+\begin{enumerate}
+    \item $(x, v) \overset{g}{\mapsto} J \overset{f}{\mapsto} Q$
+    \item After finding $g, f$ (so that we know $J$), we learn a Hamiltonian $h(x, v)$ as a symplectic completion or take a HenonNetwork that takes $x, v$ to $(J, \theta)$ (where $J$ is known), in order to learn $\theta$. (Remark: if $J$ is given (or we think we learn it perfectly), then we can let $\bar{x} = J$ and use Parra's method)
+    % (in Cartesian or polar coordinates)
+    % \begin{align}
+    %   J_i &= \frac{\partial h}{\partial v} \mid_{(x, v)}, \quad Q_i = \frac{\partial h}{\partial x} \mid_{(x, v)} \\
+    %   J_i \cos \theta_i  &= \frac{\partial h}{\partial v} \mid_{(x, v)}, \quad Q_i \sin \theta_i = \frac{\partial h}{\partial x} \mid_{(x, v)}
+    % \end{align}
+    
+\end{enumerate}
+
+\textbf{George's method II.} 
+Do George's method I with the two steps simultaneously.
+
+\textbf{Lawrence's method.}
+
+\begin{enumerate}
+    \item $(x, v) \overset{\operatorname{symp}}{\mapsto} (J, \theta) $ where $Q \approx f(J)$.
+    \item Regularization: to constrain $\theta$ to be the angle we want
+\end{enumerate}
+
+
+\section{Symmetries}
+Hogg said for $x, v \in \R^d$:
+\begin{itemize}
+\item We may need to worry about the permutation symmetry among the $d$ coordinates
+\item We do not need to worry about the rotation symmetry among the $d$ coordinates due to the toroidal geometry.
+\end{itemize}
+
+George said we may worry less, since the sympletic transformation inherits the symmetries from the beginning.
+
+George asked: is our system energy-preserving (steady state)?  if we have a dissipative system, we might need to worry about changes in symmetries due to changes of energy. 
+
+References \cite{duruisseaux}.
+
+\bibliographystyle{plain}
+\bibliography{symplectic}
 
 \end{document}
